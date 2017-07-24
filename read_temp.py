@@ -3,6 +3,12 @@ import glob
 import time
 import datetime 
 import requests
+from ConfigParser import SafeConfigParser
+
+parser = SafeConfigParser()
+parser.read('config.ini')
+
+api_key = parser.get('THINGSPEAK', 'api_key')
 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
@@ -32,8 +38,6 @@ def read_temp():
 def get_timestamp():
 	return '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now());
 
-api_key = 'N40Q8UPNU8SK05K1'
-	
 while True:
 	print(get_timestamp(), read_temp())
 	r = requests.get('https://api.thingspeak.com/update?api_key=' + api_key + '&field1=' + str(read_temp()))
